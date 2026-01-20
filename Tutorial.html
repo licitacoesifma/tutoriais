@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Vídeos - IFMA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Cores Originais do IFMA (Mantidas) */
+            --ifma-green: #1B5E20;
+            --ifma-green-light: #2E7D32;
+            --ifma-green-dark: #0D3D14;
+            --ifma-red: #C62828;
+            --ifma-red-light: #E53935;
+            --accent-yellow: #FFC107;
+            --accent-orange: #FF9800;
+            --bg-light: #F8FAF8;
+            --bg-cream: #FAFAF5;
+            --text-dark: #1A1A1A;
+            --text-muted: #5A6B5C;
+            --card-shadow: 0 4px 24px rgba(27, 94, 32, 0.08);
+            --card-shadow-hover: 0 8px 40px rgba(27, 94, 32, 0.15);
+        }
+
+        * {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-light); }
+        ::-webkit-scrollbar-thumb { background: var(--ifma-green-light); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--ifma-green); }
+
+        /* Hero Section (Reutilizada) */
+        .hero-section {
+            background: linear-gradient(135deg, var(--ifma-green-dark) 0%, var(--ifma-green) 50%, var(--ifma-green-light) 100%);
+            min-height: 45vh; /* Levemente menor para dar foco ao conteúdo */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content { position: relative; z-index: 2; }
+        .hero-logo { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+        
+        .logo-squares { display: grid; grid-template-columns: repeat(3, 14px); gap: 4px; }
+        .logo-square { width: 14px; height: 14px; border-radius: 3px; }
+        .logo-square.red { background: var(--ifma-red); }
+        .logo-square.green { background: #4CAF50; }
+        .logo-square.empty { background: transparent; }
+
+        .logo-text { color: white; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.5px; }
+        .logo-text span { display: block; font-weight: 400; font-size: 0.85rem; opacity: 0.9; }
+
+        .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: white; margin-bottom: 1rem; line-height: 1.1; }
+        .hero-subtitle { font-size: 1.25rem; color: rgba(255,255,255,0.9); font-weight: 400; max-width: 600px; }
+        
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem; border-radius: 50px;
+            color: white; font-size: 0.875rem; margin-top: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Navigation Style */
+        .nav-sticky {
+            position: sticky; top: 0; z-index: 1000;
+            background: white; box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            padding: 1rem 0;
+        }
+
+        .nav-pills-custom .nav-link {
+            color: var(--text-muted); font-weight: 500; padding: 0.6rem 1.2rem;
+            border-radius: 50px; transition: all 0.3s ease; font-size: 0.9rem;
+        }
+        .nav-pills-custom .nav-link:hover { color: var(--ifma-green); background: rgba(27, 94, 32, 0.08); }
+        .nav-pills-custom .nav-link.active { background: var(--ifma-green); color: white; }
+
+        /* --- VIDEO CARD STYLES (Novo) --- */
+        .video-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(27, 94, 32, 0.08);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .video-thumbnail-wrapper {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-thumbnail {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .video-thumbnail { opacity: 0.6; }
+
+        .play-button-overlay {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: 60px; height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--ifma-red);
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        .video-card:hover .play-button-overlay {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: var(--ifma-red);
+            color: white;
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 10px; right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .video-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
+        
+        .video-category {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;
+            font-weight: 700; margin-bottom: 0.5rem;
+            color: var(--ifma-green);
+        }
+
+        .video-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-dark); line-height: 1.4; }
+        .video-description { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; }
+
+        .btn-watch {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 8px;
+            background: transparent;
+            border: 2px solid var(--ifma-green);
+            color: var(--ifma-green);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-watch:hover { background: var(--ifma-green); color: white; }
+
+        /* Section Styling */
+        .content-section { padding: 5rem 0; }
+        .section-header { margin-bottom: 3rem; text-align: center; }
+        
+        .section-number {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--ifma-green) 0%, var(--ifma-green-light) 100%);
+            color: white; font-weight: 700; font-size: 1.25rem;
+            border-radius: 12px; margin-bottom: 1rem;
+        }
+
+        .section-title { font-size: 2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .section-description { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* Stats Cards */
+        .stat-card {
+            background: white; padding: 1.5rem; border-radius: 16px;
+            box-shadow: var(--card-shadow); text-align: center;
+            border-bottom: 4px solid var(--ifma-green);
+        }
+        .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--ifma-green); line-height: 1; margin-bottom: 0.5rem; }
+        .stat-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+
+        /* Footer (Igual ao Original) */
+        .footer {
+            background: linear-gradient(135deg, var(--ifma-green-dark) 0%, var(--ifma-green) 100%);
+            color: white; padding: 4rem 0 2rem; margin-top: 4rem;
+        }
+        
+        .contact-card {
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            border-radius: 16px; padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .contact-card:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+        .contact-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: white;}
+        .contact-name { font-weight: 600; margin-bottom: 0.25rem; }
+        .contact-email a { color: white; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 3rem; text-align: center; opacity: 0.8; font-size: 0.9rem; }
+
+        /* Animation Classes */
+        .animate-fade-in { animation: fadeInUp 0.6s ease forwards; opacity: 0; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; }
+
+        /* Featured Video Section */
+        .featured-video-container {
+            background: white; border-radius: 24px; overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(27, 94, 32, 0.08);
+        }
+        .featured-badge {
+            background: var(--ifma-red); color: white;
+            padding: 0.5rem 1rem; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+            display: inline-block; margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#navbarMain">
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-logo">
+                    <div class="logo-squares">
+                        <div class="logo-square red"></div>
+                        <div class="logo-square green"></div>
+                        <div class="logo-square green"></div>
+                        <div class="logo-square green"></div>
+                        <div class="logo-square green"></div>
+                        <div class="logo-square green"></div>
+                        <div class="logo-square green"></div>
+                        <div class="logo-square green"></div>
+                        <div class="logo-square empty"></div>
+                    </div>
+                    <div class="logo-text">
+                        INSTITUTO FEDERAL
+                        <span>Maranhão</span>
+                    </div>
+                </div>
+                <h1 class="hero-title">Galeria de Tutoriais</h1>
+                <p class="hero-subtitle">
+                    Central de vídeos orientativos sobre processos administrativos, sistemas e gestão de contratos do IFMA.
+                </p>
+                <div class="hero-badge">
+                    <i class="bi bi-play-circle-fill"></i>
+                    Acervo Digital / Capacitação
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <nav class="nav-sticky" id="navbarMain">
+        <div class="container">
+            <ul class="nav nav-pills-custom justify-content-center flex-wrap gap-1">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#destaques">
+                        <i class="bi bi-star me-1"></i>Destaques
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#compras">
+                        <i class="bi bi-cart me-1"></i>Compras e Licitações
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contratos">
+                        <i class="bi bi-file-text me-1"></i>Gestão de Contratos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#sistemas">
+                        <i class="bi bi-laptop me-1"></i>Sistemas (SUAP/SEI)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#ajuda">
+                        <i class="bi bi-question-circle me-1"></i>Ajuda
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Seção Destaque -->
+    <section id="destaques" class="content-section">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <div class="featured-video-container animate-fade-in delay-1">
+                        <div class="video-thumbnail-wrapper">
+                            <!-- Placeholder colorido para o thumbnail -->
+                            <div style="background: linear-gradient(45deg, #1B5E20, #2E7D32); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-play-circle-fill text-white" style="font-size: 5rem; opacity: 0.8;"></i>
+                            </div>
+                            <!-- Botão play overlay invisível que ativa o modal, apenas visual aqui -->
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Tutorial Completo: Nova Lei de Licitações" data-video-src="https://www.youtube.com/embed/dQw4w9WgXcQ"> <!-- Link dummy -->
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="animate-fade-in delay-2">
+                        <span class="featured-badge">Vídeo em Destaque</span>
+                        <h2 class="section-title mb-3">Nova Lei de Licitações na Prática</h2>
+                        <p class="section-description mb-4">
+                            Entenda as principais mudanças trazidas pela Lei 14.133/2021 e como elas impactam os processos de contratação no âmbito do IFMA. Um guia completo para gestores e fiscais.
+                        </p>
+                        
+                        <div class="d-flex gap-4 mb-4">
+                            <div>
+                                <h4 class="fw-bold text-success mb-0">45</h4>
+                                <small class="text-muted">Minutos</small>
+                            </div>
+                            <div>
+                                <h4 class="fw-bold text-success mb-0">12</h4>
+                                <small class="text-muted">Módulos</small>
+                            </div>
+                            <div>
+                                <h4 class="fw-bold text-success mb-0">HD</h4>
+                                <small class="text-muted">Qualidade</small>
+                            </div>
+                        </div>
+
+                        <a href="#" class="btn btn-success rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Nova Lei de Licitações na Prática">
+                            <i class="bi bi-play-fill me-2"></i>Assistir Agora
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="row g-4 mt-4">
+                <div class="col-md-3">
+                    <div class="stat-card animate-fade-in delay-1">
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Vídeos Disponíveis</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card animate-fade-in delay-2">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Categorias</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card animate-fade-in delay-3">
+                        <div class="stat-number">12h</div>
+                        <div class="stat-label">Conteúdo Total</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card animate-fade-in delay-4">
+                        <div class="stat-number">PDF</div>
+                        <div class="stat-label">Materiais de Apoio</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categoria: Compras e Licitações -->
+    <section id="compras" class="content-section bg-white">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2 class="section-title">Compras e Licitações</h2>
+                <p class="section-description">Tutoriais sobre ETP, TR, DFD e uso do Compras.gov.br</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Video 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="video-card">
+                        <div class="video-thumbnail-wrapper">
+                            <!-- Placeholder Imagem -->
+                            <div style="background-color: #eee; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #aaa;">
+                                <i class="bi bi-file-earmark-text" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="video-duration">12:30</div>
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Como elaborar o DFD">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="video-content">
+                            <div class="video-category">Planejamento</div>
+                            <h3 class="video-title">Elaboração do Documento de Formalização da Demanda (DFD)</h3>
+                            <p class="video-description">Passo a passo para preencher e enviar o DFD no sistema para o PCA 2027.</p>
+                            <button class="btn-watch" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Como elaborar o DFD">
+                                Assistir Vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="video-card">
+                        <div class="video-thumbnail-wrapper">
+                            <div style="background-color: #eee; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #aaa;">
+                                <i class="bi bi-search" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="video-duration">08:45</div>
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Pesquisa de Preços">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="video-content">
+                            <div class="video-category">Pesquisa</div>
+                            <h3 class="video-title">Realização de Pesquisa de Preços</h3>
+                            <p class="video-description">Como utilizar o painel de preços e montar a cesta de preços aceitáveis.</p>
+                            <button class="btn-watch" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Pesquisa de Preços">
+                                Assistir Vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="video-card">
+                        <div class="video-thumbnail-wrapper">
+                            <div style="background-color: #eee; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #aaa;">
+                                <i class="bi bi-pencil-square" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="video-duration">15:20</div>
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Estudo Técnico Preliminar">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="video-content">
+                            <div class="video-category">Planejamento</div>
+                            <h3 class="video-title">Estudo Técnico Preliminar (ETP) Digital</h3>
+                            <p class="video-description">Guia para elaboração do ETP Digital, justificativas e análise de riscos.</p>
+                            <button class="btn-watch" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Estudo Técnico Preliminar">
+                                Assistir Vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categoria: Gestão de Contratos -->
+    <section id="contratos" class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2 class="section-title">Gestão de Contratos</h2>
+                <p class="section-description">Orientações para Fiscais e Gestores de Contratos</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Video 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="video-card">
+                        <div class="video-thumbnail-wrapper">
+                            <div style="background-color: #e0f2f1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #1B5E20;">
+                                <i class="bi bi-clipboard-check" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="video-duration">10:15</div>
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Atribuições do Fiscal">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="video-content">
+                            <div class="video-category">Fiscalização</div>
+                            <h3 class="video-title">Atribuições do Fiscal de Contrato</h3>
+                            <p class="video-description">Responsabilidades, rotinas de acompanhamento e registros necessários.</p>
+                            <button class="btn-watch" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Atribuições do Fiscal">
+                                Assistir Vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 5 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="video-card">
+                        <div class="video-thumbnail-wrapper">
+                            <div style="background-color: #e0f2f1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #1B5E20;">
+                                <i class="bi bi-currency-dollar" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="video-duration">14:00</div>
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Pagamentos e Notas">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="video-content">
+                            <div class="video-category">Pagamentos</div>
+                            <h3 class="video-title">Recebimento de Notas Fiscais</h3>
+                            <p class="video-description">Como proceder com o atesto de notas e encaminhamento para pagamento.</p>
+                            <button class="btn-watch" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Pagamentos e Notas">
+                                Assistir Vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 6 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="video-card">
+                        <div class="video-thumbnail-wrapper">
+                            <div style="background-color: #e0f2f1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #1B5E20;">
+                                <i class="bi bi-exclamation-triangle" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="video-duration">09:30</div>
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Aplicação de Penalidades">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="video-content">
+                            <div class="video-category">Sanções</div>
+                            <h3 class="video-title">Processo de Aplicação de Penalidades</h3>
+                            <p class="video-description">Fluxo processual para notificação e aplicação de sanções a fornecedores.</p>
+                            <button class="btn-watch" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Aplicação de Penalidades">
+                                Assistir Vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categoria: Sistemas -->
+    <section id="sistemas" class="content-section bg-white">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2 class="section-title">Sistemas (SUAP/SEI)</h2>
+                <p class="section-description">Tutoriais operacionais dos sistemas institucionais</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Video 7 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="video-card">
+                        <div class="video-thumbnail-wrapper">
+                            <div style="background-color: #fff3e0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #ef6c00;">
+                                <i class="bi bi-folder2-open" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="video-duration">06:50</div>
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Abrir Processo no SEI">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="video-content">
+                            <div class="video-category">SEI</div>
+                            <h3 class="video-title">Abertura de Processos no SEI</h3>
+                            <p class="video-description">Como iniciar um processo administrativo, incluir documentos e assinaturas.</p>
+                            <button class="btn-watch" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Abrir Processo no SEI">
+                                Assistir Vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 8 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="video-card">
+                        <div class="video-thumbnail-wrapper">
+                            <div style="background-color: #fff3e0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #ef6c00;">
+                                <i class="bi bi-laptop" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="video-duration">11:15</div>
+                            <a href="#" class="play-button-overlay" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Módulo de Patrimônio SUAP">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="video-content">
+                            <div class="video-category">SUAP</div>
+                            <h3 class="video-title">Movimentação de Bens no SUAP</h3>
+                            <p class="video-description">Como realizar transferências e cautelas de bens patrimoniais via sistema.</p>
+                            <button class="btn-watch" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-title="Módulo de Patrimônio SUAP">
+                                Assistir Vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Vídeo Genérico -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                <div class="modal-header bg-dark text-white border-0">
+                    <h5 class="modal-title" id="videoModalLabel">Título do Vídeo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 bg-black">
+                    <!-- Ratio 16:9 para o vídeo -->
+                    <div class="ratio ratio-16x9">
+                        <!-- Iframe placeholder - Em produção, o JS trocaria o SRC -->
+                        <iframe id="videoFrame" src="" title="Video Player" allowfullscreen></iframe>
+                        
+                        <!-- Overlay apenas para demonstração (se não houver vídeo real) -->
+                        <div class="d-flex align-items-center justify-content-center text-white h-100 flex-column">
+                            <i class="bi bi-play-circle" style="font-size: 4rem; opacity: 0.5;"></i>
+                            <p class="mt-3">Simulação de Player de Vídeo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light justify-content-between">
+                    <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Conteúdo de uso interno do IFMA</small>
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <div class="hero-logo mb-3">
+                        <div class="logo-squares">
+                            <div class="logo-square red"></div>
+                            <div class="logo-square green"></div>
+                            <div class="logo-square green"></div>
+                            <div class="logo-square green"></div>
+                            <div class="logo-square green"></div>
+                            <div class="logo-square green"></div>
+                            <div class="logo-square green"></div>
+                            <div class="logo-square green"></div>
+                            <div class="logo-square empty"></div>
+                        </div>
+                        <div class="logo-text">
+                            INSTITUTO FEDERAL
+                            <span>Maranhão</span>
+                        </div>
+                    </div>
+                    <p class="opacity-75">
+                        Coordenação de Licitações e Contratos<br>
+                        Diretoria de Administração<br>
+                        Pró-Reitoria de Administração
+                    </p>
+                </div>
+                <div class="col-lg-8">
+                    <h5 class="footer-title">Dúvidas? Entre em contato</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                                <div class="contact-name">Suporte DFD</div>
+                                <div class="contact-email">
+                                    <a href="mailto:suporte.dfd@ifma.edu.br">suporte.dfd@ifma.edu.br</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="bi bi-camera-video"></i>
+                                </div>
+                                <div class="contact-name">Equipe EAD</div>
+                                <div class="contact-email">
+                                    <a href="mailto:ead@ifma.edu.br">ead@ifma.edu.br</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="mb-0">
+                    <i class="bi bi-c-circle me-1"></i>2024 Instituto Federal do Maranhão - Todos os direitos reservados
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Se for link para modal, não faz scroll
+                if(this.hasAttribute('data-bs-toggle')) return;
+
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const navHeight = document.querySelector('.nav-sticky').offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 20;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Update active nav link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-pills-custom .nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 250) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Modal Logic to update Title
+        const videoModal = document.getElementById('videoModal');
+        videoModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const title = button.getAttribute('data-video-title');
+            const modalTitle = videoModal.querySelector('.modal-title');
+            
+            modalTitle.textContent = title || "Visualizar Vídeo";
+            
+            // Nota: Em um cenário real, você também pegaria o link do vídeo (data-video-src)
+            // e atualizaria o 'src' do iframe dentro do modal.
+        });
+
+        // Limpar iframe ao fechar para parar o áudio (caso houvesse vídeo real)
+        videoModal.addEventListener('hidden.bs.modal', event => {
+             const iframe = videoModal.querySelector('iframe');
+             const tempSrc = iframe.src;
+             iframe.src = '';
+             iframe.src = tempSrc;
+        });
+    </script>
+</body>
+</html>
